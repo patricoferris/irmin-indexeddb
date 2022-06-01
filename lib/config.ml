@@ -1,8 +1,10 @@
 (* Copyright (C) 2020, Thomas Leonard.
    See the README file for details. *)
 
+let db_spec = Irmin.Backend.Conf.Spec.v "indexeddb_db_name"
+
 let db_name_key =
-  Irmin.Private.Conf.(key "indexeddb_db_name" string "Irmin")
+  Irmin.Backend.Conf.(key ~spec:db_spec "indexeddb_db_name" Irmin.Type.string "Irmin")
 
 (* These were the stores used in schema version 2 to store the data. *)
 let ao_old = Raw.store_name "ao"
@@ -33,4 +35,4 @@ let connect db_name =
       failwith "Attempt to upgrade from unknown schema version!"
   )
 
-let v db_name = Irmin.Private.Conf.singleton db_name_key db_name
+let v name = Irmin.Backend.Conf.singleton db_spec db_name_key name
